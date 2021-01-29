@@ -101,15 +101,37 @@ select count(priceeach*quantityordered) from orderdetails where priceeach*quanti
 
 One to many relationship
 1.	Report the account representative for each customer.
+select distinct customername, concat(e.firstname,' ',e.lastname) from customers c join employees e on c.salesrepemployeenumber=e.employeenumber;
+
 2.	Report total payments for Atelier graphique.
+select sum(amount) from customers c join payments p on c.customernumber = p.customernumber where c.customername='Atelier graphique';
+22314.36
+
 3.	Report the total payments by date
+select paymentdate, sum(amount) from payments group by paymentdate;
+
 4.	Report the products that have not been sold.
+select p.productname, o.quantityordered from products p left join orderdetails o on p.productcode=o.productcode where o.quantityordered is null;
+1985 Toyota Supra
+
 5.	List the amount paid by each customer.
+select c.customername, sum(amount) from customers c join payments p on c.customernumber = p.customernumber group by c.customername;
+
 6.	How many orders have been placed by Herkku Gifts?
+select c.customername, count(o.ordernumber) from customers c join orders o on c.customernumber = o.customernumber group by c.customername;
+
 7.	Who are the employees in Boston?
+select * from employees e join offices o on e.officecode = o.officecode where city = 'Boston';
+
 8.	Report those payments greater than $100,000. Sort the report so the customer who made the highest payment appears first.
+select c.customername, p.amount from payments p join customers c on p.customernumber = c.customernumber where p.amount>100000 order by amount desc;
+
 9.	List the value of 'On Hold' orders.
+select sum(od.priceeach*od.quantityordered) from orders o join orderdetails od on o.ordernumber = od.ordernumber where o.status='On Hold';
+169575.61
+
 10.	Report the number of orders 'On Hold' for each customer.
+select c.customername, count(o.status) from orders o join customers c on o.customernumber = c.customernumber where o.status='On Hold' group by c.customername;
 
 Many to many relationship
 1.	List products sold by order date.
