@@ -1,21 +1,103 @@
 I will be answering the following questions using the ClassicModels practice SQL database.
 
 Single entity 
-1.	Prepare a list of offices sorted by country, state, city. 
+1.	Prepare a list of offices sorted by country, state, city.
+select * from offices order by country, state, city;
+'6','Sydney','+61 2 9264 2451','5-11 Wentworth Avenue','Floor #2',NULL,'Australia','NSW 2010','APAC'
+'4','Paris','+33 14 723 4404','43 Rue Jouffroy D\'abbans',NULL,NULL,'France','75017','EMEA'
+'5','Tokyo','+81 33 224 5000','4-1 Kioicho',NULL,'Chiyoda-Ku','Japan','102-8578','Japan'
+'7','London','+44 20 7877 2041','25 Old Broad Street','Level 7',NULL,'UK','EC2N 1HN','EMEA'
+'1','San Francisco','+1 650 219 4782','100 Market Street','Suite 300','CA','USA','94080','NA'
+'2','Boston','+1 215 837 0825','1550 Court Place','Suite 102','MA','USA','02107','NA'
+'3','NYC','+1 212 555 3000','523 East 53rd Street','apt. 5A','NY','USA','10022','NA'
+
 2.	How many employees are there in the company?
+select distinct count(*) from employees;
+23
+
 3.	What is the total of payments received?
+select sum(amount) from payments;
+8853839.23
+
 4.	List the product lines that contain 'Cars'.
+select productline from productlines where productline like '%Cars'
+'Classic Cars'
+'Vintage Cars'
+
 5.	Report total payments for October 28, 2004.
+select sum(amount) from payments where paymentdate = '2004-10-28';
+47411.33
+
 6.	Report those payments greater than $100,000.
+select * from payments where amount>100000;
+'124','AE215433','2005-03-05','101244.59'
+'124','KI131716','2003-08-15','111654.40'
+'141','ID10962','2004-12-31','116208.40'
+'141','JE105477','2005-03-18','120166.58'
+'148','KM172879','2003-12-26','105743.00'
+
 7.	List the products in each product line.
 8.	How many products in each product line?
+select distinct productline, count(productname) from products group by productline order by productline;
+'Classic Cars','38'
+'Motorcycles','13'
+'Planes','12'
+'Ships','9'
+'Trains','3'
+'Trucks and Buses','11'
+'Vintage Cars','24'
+
 9.	What is the minimum payment received?
+select min(amount) from payments;
+615.45
+
 10.	List all payments greater than twice the average payment.
+??????????
+
 11.	What is the average percentage markup of the MSRP on buyPrice?
+select avg((msrp-buyprice)/buyprice)*100 from products;
+88.7023921713%
+
 12.	How many distinct products does ClassicModels sell?
+select distinct count(productname) from products;
+110
+
 13.	Report the name and city of customers who don't have sales representatives?
+select customername, city from customers where salesrepemployeenumber is null;
+'Havel & Zbyszek Co','Warszawa'
+'Porto Imports Co.','Lisboa'
+'Asian Shopping Network, Co','Singapore'
+'Natürlich Autos','Cunewalde'
+'ANG Resellers','Madrid'
+'Messner Shopping Network','Frankfurt'
+'Franken Gifts, Co','München'
+'BG&E Collectables','Fribourg'
+'Schuyler Imports','Amsterdam'
+'Der Hund Imports','Berlin'
+'Cramer Spezialitäten, Ltd','Brandenburg'
+'Asian Treasures, Inc.','Cork'
+'SAR Distributors, Co','Hatfield'
+'Kommission Auto','Münster'
+'Lisboa Souveniers, Inc','Lisboa'
+'Stuttgart Collectable Exchange','Stuttgart'
+'Feuer Online Stores, Inc','Leipzig'
+'Warburg Exchange','Aachen'
+'Anton Designs, Ltd.','Madrid'
+'Mit Vergnügen & Co.','Mannheim'
+'Kremlin Collectables, Co.','Saint Petersburg'
+'Raanan Stores, Inc','Herzlia'
+
 14.	What are the names of executives with VP or Manager in their title? Use the CONCAT function to combine the employee's first name and last name into a single field for reporting.
+select concat(firstname,' ' , lastname) from employees where jobtitle like '%VP%' or jobtitle like '%Manager%';
+'Mary Patterson'
+'Jeff Firrelli'
+'William Patterson'
+'Gerard Bondur'
+'Anthony Bow'
+
 15.	Which orders have a value greater than $5,000?
+select count(priceeach*quantityordered) from orderdetails where priceeach*quantityordered>5000;
+410 of them
 
 One to many relationship
 1.	Report the account representative for each customer.
