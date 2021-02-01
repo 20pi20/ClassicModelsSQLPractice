@@ -135,13 +135,29 @@ select c.customername, count(o.status) from orders o join customers c on o.custo
 
 Many to many relationship
 1.	List products sold by order date.
+select p.productname, o.orderdate from orders o join orderdetails od join products p on o.ordernumber=od.ordernumber and p.productcode=od.productcode;
+
 2.	List the order dates in descending order for orders for the 1940 Ford Pickup Truck.
+select p.productname, o.orderdate from orders o join orderdetails od join products p on o.ordernumber=od.ordernumber and p.productcode=od.productcode where p.productname="1940 Ford Pickup Truck" order by o.orderdate desc;
+
 3.	List the names of customers and their corresponding order number where a particular order from that customer has a value greater than $25,000?
+select c.customername, o.ordernumber from customers c join orders o join orderdetails od on c.customernumber=o.customernumber and o.ordernumber=od.ordernumber where od.priceeach*od.quantityordered>25000;
+
 4.	Are there any products that appear on all orders?
+select count(distinct od.ordernumber), p.productcode from orderdetails od join products p on od.productcode=p.productcode group by p.productcode;
+No
+
 5.	List the names of products sold at less than 80% of the MSRP.
-6.	Reports those products that have been sold with a markup of 100% or more (i.e.,  the priceEach is at least twice the buyPrice)
+select distinct p.productname from orderdetails o join products p on p.productcode=o.productcode where o.priceeach/p.msrp<0.8;
+
+6.	Report those products that have been sold with a markup of 100% or more (i.e.,  the priceEach is at least twice the buyPrice)
+select distinct p.productname from orderdetails o join products p on p.productcode=o.productcode where o.priceeach>2*p.buyprice;
+
 7.	List the products ordered on a Monday.
+select distinct p.productname from orders o join orderdetails od join products p on o.ordernumber=od.ordernumber and od.productcode=p.productcode where dayname(o.orderdate)='Monday';
+
 8.	What is the quantity on hand for products listed on 'On Hold' orders? 
+select distinct p.productname, p.quantityinstock from orders o join orderdetails od join products p on o.ordernumber=od.ordernumber and od.productcode=p.productcode where o.status='On Hold';
 
 Regular expressions
 1.	Find products containing the name 'Ford'.
