@@ -161,16 +161,37 @@ select distinct p.productname, p.quantityinstock from orders o join orderdetails
 
 Regular expressions
 1.	Find products containing the name 'Ford'.
+select distinct productname from products where productname like '%Ford%'
+
 2.	List products ending in 'ship'.
+select distinct productname from products where productname like '%ship'
+
 3.	Report the number of customers in Denmark, Norway, and Sweden.
-4.	What are the products with a product code in the range S700_1000 to S700_1499?
+select distinct country, count(*) from customers group by country having country in ('Denmark','Norway','Sweden');
+
+4.	What are the products with a product code in the range S700_1000 to S700_1499
+select productname, productcode from products where productcode between 'S700_1000' and 'S700_1499';
+
 5.	Which customers have a digit in their name?
-6.	List the names of employees called Dianne or Diane. 
-7.	List the products containing ship or boat in their product name. 
+select customername from customers where customername REGEXP '[0-9]';
+
+6.	List the names of employees called Dianne or Diane.
+select firstname from employees where firstname regexp 'Dianne|Diane';
+
+7.	List the products containing ship or boat in their product name.
+select productname from products where productname regexp 'ship|boat';
+
 8.	List the products with a product code beginning with S700.
+select productname from products where productcode regexp '^S700'
+
 9.	List the names of employees called Larry or Barry. 
+select firstname from employees where firstname regexp '[LB]arry';
+
 10.	List the names of employees with non-alphabetic characters in their names. 
+select firstname from employees where firstname regexp '[^a-zA-z]';
+
 11.	List the vendors whose name ends in Diecast
+select productvendor from products where productvendor regexp 'Diecast$'
 
 General queries
 1.	Who is at the top of the organization (i.e.,  reports to no one).
