@@ -136,15 +136,47 @@ select productvendor from products where productvendor regexp 'Diecast$'
 
 General queries
 1.	Who is at the top of the organization (i.e.,  reports to no one).
+select concat(firstname," ",lastname) from employees where reportsto is null;
+
 2.	Who reports to William Patterson?
+select concat(firstname," ",lastname) from employees where reportsto in (select employeenumber from employees where concat(firstname," ",lastname)='William Patterson');
+
 3.	List all the products purchased by Herkku Gifts.
+select distinct productname from customers c join orders o on c.customernumber=o.customernumber
+join orderdetails od on od.ordernumber=o.ordernumber
+join products p on p.productcode=od.productcode
+where customername = 'Herkku Gifts';
+
 4.	Compute the commission for each sales representative, assuming the commission is 5% of the value of an order. Sort by employee last name and first name.
+select e.firstname, e.lastname, sum(quantityordered*priceeach*0.05) from customers c join orders o on c.customernumber=o.customernumber
+join orderdetails od on od.ordernumber=o.ordernumber
+join employees e on c.salesrepemployeenumber=e.employeenumber
+group by e.firstname, e.lastname
+order by e.lastname, e.firstname;
+
 5.	What is the difference in days between the most recent and oldest order date in the Orders file?
+select datediff(max(orderdate),min(orderdate)) from orders;
+
 6.	Compute the average time between order date and ship date for each customer ordered by the largest difference.
-7.	What is the value of orders shipped in August 2004? (Hint).
+select customername, avg(datediff(shippeddate,orderdate)) from customers c join orders o on c.customernumber=o.customernumber
+group by customername order by 2 desc;
+
+7.	What is the value of orders shipped in August 2004?.
+select sum(quantityordered*priceeach) from orders join orderdetails using (ordernumber) where year(orderdate) = 2004 and month(orderdate) = 8;
+
 8.	Compute the total value ordered, total amount paid, and their difference for each customer for orders placed in 2004 and payments received in 2004 (Hint; Create views for the total paid and total ordered). 
+?????
+
 9.	List the employees who report to those employees who report to Diane Murphy. Use the CONCAT function to combine the employee's first name and last name into a single field for reporting.
+select concat(firstname," ",lastname) from employees where reportsto in
+(select employeenumber from employees 
+where reportsto = (select employeenumber from employees where concat(firstname," ",lastname)='Diane Murphy'));
+
 10.	What is the percentage value of each product in inventory sorted by the highest percentage first (Hint: Create a view first).
+select distinct productname, quantityInStock, (quantityInStock/t.s)*100
+from products CROSS JOIN (SELECT SUM(quantityinstock) AS s FROM products) t
+order by 3 desc;
+
 11.	Write a function to convert miles per gallon to liters per 100 kilometers.
 12.	Write a procedure to increase the price of a specified product category by a given percentage. You will need to create a product table with appropriate data to test your procedure. Alternatively, load the ClassicModels database on your personal machine so you have complete access. You have to change the DELIMITER prior to creating the procedure.
 13.	What is the value of orders shipped in August 2004? (Hint).
